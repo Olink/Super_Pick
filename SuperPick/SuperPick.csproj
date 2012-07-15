@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Recursive.cs" />
     <Compile Include="SuperPick.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
