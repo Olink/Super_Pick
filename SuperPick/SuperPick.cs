@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Hooks;
 using TShockAPI;
 using Terraria;
+using TerrariaApi.Server;
 
 namespace SuperPick
 {
-    [APIVersion( 1,12)]
+    [ApiVersion( 1,15)]
     public class SuperPick : TerrariaPlugin
     {
         private bool[] players;
@@ -45,33 +45,41 @@ namespace SuperPick
 
         public override void Initialize()
         {
-            Hooks.ServerHooks.Leave += OnLeave;
+            ServerApi.Hooks.ServerLeave.Register(this, OnLeave);
             GetDataHandlers.TileEdit += OnTileEdit;
             Commands.ChatCommands.Add( new Command("superpick", Toggle, "superpick", "sp"));
         }
 
-        private void OnLeave( int who )
+        private void OnLeave(LeaveEventArgs args)
         {
-            players[who] = false;
+            players[args.Who] = false;
         }
 
         private void OnTileEdit( object sender, GetDataHandlers.TileEditEventArgs args )
         {
             if (players[args.Player.Index])
             {
-                switch( args.EditType )
+                switch( args.Action )
                 {
-                    case 0:
-                    case 4:
+                    case GetDataHandlers.EditAction.KillTile:
+                    case GetDataHandlers.EditAction.KillTileNoItem:
                         WorldGen.KillTile(args.X, args.Y);
                         TSPlayer.All.SendTileSquare(args.X, args.Y, 1);
                         break;
-                    case 2:
+                    case GetDataHandlers.EditAction.KillWall:
                         WorldGen.KillWall(args.X, args.Y);
                         TSPlayer.All.SendTileSquare(args.X, args.Y, 1);
                         break;
-                    case 6:
+                    case GetDataHandlers.EditAction.KillWire:
                         WorldGen.KillWire(args.X, args.Y);
+                        TSPlayer.All.SendTileSquare(args.X, args.Y, 1);
+                        break;
+                    case GetDataHandlers.EditAction.KillWire2:
+                        WorldGen.KillWire2(args.X, args.Y);
+                        TSPlayer.All.SendTileSquare(args.X, args.Y, 1);
+                        break;
+                    case GetDataHandlers.EditAction.KillWire3:
+                        WorldGen.KillWire3(args.X, args.Y);
                         TSPlayer.All.SendTileSquare(args.X, args.Y, 1);
                         break;
                 }
@@ -87,7 +95,7 @@ namespace SuperPick
         {
             if (disposing)
             {
-                ServerHooks.Leave -= OnLeave;
+                ServerApi.Hooks.ServerLeave.Deregister(this, OnLeave);
                 GetDataHandlers.TileEdit -= OnTileEdit;
             }
 
