@@ -8,7 +8,7 @@ using TerrariaApi.Server;
 
 namespace SuperPick
 {
-    [ApiVersion( 1,15)]
+    [ApiVersion( 1,16)]
     public class SuperPick : TerrariaPlugin
     {
         private bool[] players;
