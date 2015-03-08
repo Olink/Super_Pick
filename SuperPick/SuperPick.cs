@@ -8,14 +8,14 @@ using TerrariaApi.Server;
 
 namespace SuperPick
 {
-    [ApiVersion( 1,16)]
+    [ApiVersion( 1,17)]
     public class SuperPick : TerrariaPlugin
     {
         private bool[] players;
 
         public override string Author
         {
-            get { return "Zack"; }
+            get { return "Olink"; }
         }
 
         public override string Description
